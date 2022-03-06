@@ -26,16 +26,11 @@ public class UserController {
             return "用户名已存在";
 
         User user = new User();
+        username = HtmlUtils.htmlEscape(username);
         user.setUsername(username);
+        password = HtmlUtils.htmlEscape(password);
         user.setPassword(password);
 
-        String salt = new SecureRandomNumberGenerator().nextBytes().toString();
-        int times = 2;
-        String algorithm = "md5";
-        String pwdAfterHash = new SimpleHash(algorithm, password, salt, times).toString();
-
-        user.setSalt(salt);
-        user.setPassword(pwdAfterHash);
         userService.addUser(user);
         return "Success";
     }
