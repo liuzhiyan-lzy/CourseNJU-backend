@@ -14,8 +14,8 @@ public class User {
     @Column(name = "id")
     private int id;
 
-    @Column(name = "user_number")
-    private String userNumber;
+    @Column(name = "user_id")
+    private String userId;
 
     @Column(name = "password")
     private String password;
@@ -46,12 +46,12 @@ public class User {
         this.id = id;
     }
 
-    public String getUserNumber() {
-        return userNumber;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setUserNumber(String userNumber) {
-        this.userNumber = userNumber;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getPassword() {

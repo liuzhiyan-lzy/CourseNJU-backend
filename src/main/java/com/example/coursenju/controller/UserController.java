@@ -18,12 +18,12 @@ public class UserController {
     @PostMapping("register")
     @ResponseBody
     public ResponseData Register(@RequestBody Map<String, String> userInfo) {
-        boolean isExist = userService.isExist(userInfo.get("user_number"));
+        boolean isExist = userService.isExist(userInfo.get("user_id"));
         if (isExist)
-            return ResponseDataUtil.buildError("UserNumber exists");
+            return ResponseDataUtil.buildError("UserId exists");
 
         User user = new User();
-        user.setUserNumber(userInfo.get("user_number"));
+        user.setUserId(userInfo.get("user_id"));
         user.setPassword(userInfo.get("password"));
         user.setType(Integer.parseInt(userInfo.get("type")));
         user.setUserName(userInfo.get("user_name"));
@@ -40,13 +40,13 @@ public class UserController {
     @PostMapping("login")
     @ResponseBody
     public ResponseData Login(@RequestBody Map<String, String> loginInfo) {
-        String userNumber = loginInfo.get("user_number");
+        String userId = loginInfo.get("user_id");
         String password = loginInfo.get("password");
-        boolean isExist = userService.isExist(userNumber);
+        boolean isExist = userService.isExist(userId);
         if (!isExist)
             return ResponseDataUtil.buildError("Not Register");
 
-        User user = userService.getUserByUserNumber(userNumber);
+        User user = userService.getUserByUserId(userId);
         if (!password.equals(user.getPassword()))
             return ResponseDataUtil.buildError("Wrong password");
 
