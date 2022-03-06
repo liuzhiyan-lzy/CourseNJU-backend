@@ -1,4 +1,4 @@
-package com.example.coursenju.entity;
+package com.example.coursenju.util;
 
 public class Status {
     // 未开始

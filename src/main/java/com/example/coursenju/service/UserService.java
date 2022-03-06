@@ -10,12 +10,12 @@ public class UserService {
     @Autowired
     UserDao userDao;
 
-    public User getUserByUserNumber(String userNumber) {
-        return userDao.findByUserNumber(userNumber);
+    public User getUserByUserId(String userId) {
+        return userDao.findByUserId(userId);
     }
 
-    public boolean isExist(String userNumber) {
-        User user = getUserByUserNumber(userNumber);
+    public boolean isExist(String userId) {
+        User user = getUserByUserId(userId);
         return user != null;
     }
 
