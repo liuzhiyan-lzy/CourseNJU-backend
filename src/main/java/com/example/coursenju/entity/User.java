@@ -20,6 +20,9 @@ public class User {
     @Column(name = "password")
     private String password;
 
+    @Column(name = "type")
+    private int type;
+
     public int getId() {
         return id;
     }
@@ -42,5 +45,13 @@ public class User {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public void serType(int type) {
+        this.type = type;
+    }
+
+    public int getType() {
+        return type;
     }
 }
