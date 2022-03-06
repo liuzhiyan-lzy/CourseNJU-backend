@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
-
 @Controller
 @RequestMapping("/user/")
 public class UserController {
