@@ -1,25 +1,39 @@
 package com.example.coursenju.service;
 
-import com.example.coursenju.dao.UserDao;
+import com.example.coursenju.mapper.UserMapper;
 import com.example.coursenju.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserService {
     @Autowired
-    UserDao userDao;
+    private UserMapper userMapper;
 
-    public User getUserByUserId(String userId) {
-        return userDao.findByUserId(userId);
+    public void addUser(User user) {
+        userMapper.addUser(user);
+    }
+
+    public void deleteUser(String userId) {
+        userMapper.deleteUser(userId);
+    }
+
+    public void updateUser(User user) {
+        userMapper.updateUser(user);
+    }
+
+    public User getUserById(String userId) {
+        return userMapper.getUserById(userId);
     }
 
     public boolean isExist(String userId) {
-        User user = getUserByUserId(userId);
+        User user = getUserById(userId);
         return user != null;
     }
 
-    public void addUser(User user) {
-        userDao.save(user);
+    public List<User> getAllUsers() {
+        return userMapper.getAllUsers();
     }
 }

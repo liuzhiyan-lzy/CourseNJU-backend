@@ -1,41 +1,23 @@
 package com.example.coursenju.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import javax.persistence.*;
-
-@Entity
-@Table(name = "user")
-@JsonIgnoreProperties({"handler","hibernateLazyInitializer"})
 public class User {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private int id;
 
-    @Column(name = "user_id")
     private String userId;
 
-    @Column(name = "password")
     private String password;
 
-    @Column(name = "type")
     private int type;
 
-    @Column(name = "user_name")
     private String userName;
 
-    @Column(name = "user_sex")
     private int userSex;
 
-    @Column(name = "identity_id")
     private String identityId;
 
-    @Column(name = "college")
     private String college;
 
-    @Column(name = "email")
     private String email;
 
     public int getId() {
@@ -108,5 +90,30 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public User() {
+
+    }
+
+    public String toInfoString() {
+        return "id: " +
+                id +
+                "\nuserId: " +
+                userId +
+                "\npassword: " +
+                password +
+                "\ntype: " +
+                type +
+                "\nuserName: " +
+                userName +
+                "\nuserSex: " +
+                userSex +
+                "\nidentityId: " +
+                identityId +
+                "\ncollege: " +
+                college +
+                "\nemail: " +
+                email;
     }
 }
