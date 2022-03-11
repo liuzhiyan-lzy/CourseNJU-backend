@@ -29,6 +29,8 @@ public class UserService {
     }
 
     public boolean isExist(String userId) {
+        if (userId.equals(""))
+            return false;
         User user = getUserById(userId);
         return user != null;
     }

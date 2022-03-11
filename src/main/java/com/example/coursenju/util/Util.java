@@ -2,7 +2,7 @@ package com.example.coursenju.util;
 
 import java.util.Random;
 
-public class Math {
+public class Util {
 
     public static String getRandomString(int length){
         //定义一个字符串（A-Z，a-z，0-9）即62位；

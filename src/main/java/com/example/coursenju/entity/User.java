@@ -92,8 +92,10 @@ public class User {
         this.email = email;
     }
 
-    public User() {
+    public User() {}
 
+    public User(String userId) {
+        this.userId = userId;
     }
 
     public String toInfoString() {

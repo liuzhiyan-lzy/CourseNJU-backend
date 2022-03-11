@@ -17,11 +17,9 @@ public class UserController extends BaseController {
     public ResponseData Register() {
         Map<String, String[]> userInfo = request.getParameterMap();
         String userId = userInfo.get("user_id")[0];
-        boolean isExist = userService.isExist(userId);
-        if (isExist)
+        if (userId.equals("") || userService.isExist(userId))
             return ResponseDataUtil.buildError("404", "用户已存在");
-        User user = new User();
-        user.setUserId(userId);
+        User user = new User(userId);
         setUserInfo(userInfo, user);
         userService.addUser(user);
         return ResponseDataUtil.buildSuccess("200", "注册成功");
@@ -31,9 +29,9 @@ public class UserController extends BaseController {
     public ResponseData Login() {
         String userId = request.getParameter("user_id");
         String password = request.getParameter("password");
-        User user = userService.getUserById(userId);
-        if (user == null)
+        if (!userService.isExist(userId))
             return ResponseDataUtil.buildError("404", "用户不存在");
+        User user = userService.getUserById(userId);
         if (!password.equals(user.getPassword()))
             return ResponseDataUtil.buildError("400", "密码错误");
         return ResponseDataUtil.buildSuccess("200", "登录成功", user);
@@ -53,9 +51,9 @@ public class UserController extends BaseController {
     public ResponseData Update() {
         Map<String, String[]> userInfo = request.getParameterMap();
         String userId = userInfo.get("user_id")[0];
-        User user = userService.getUserById(userId);
-        if (user == null)
+        if (!userService.isExist(userId))
             return ResponseDataUtil.buildError("404", "用户不存在");
+        User user = userService.getUserById(userId);
         setUserInfo(userInfo, user);
         userService.updateUser(user);
         return ResponseDataUtil.buildSuccess("200", "更新成功");
@@ -64,9 +62,9 @@ public class UserController extends BaseController {
     @RequestMapping("/get")
     public ResponseData GetUserById() {
         String userId = request.getParameter("user_id");
-        User user = userService.getUserById(userId);
-        if (user == null)
+        if (!userService.isExist(userId))
             return ResponseDataUtil.buildError("404", "用户不存在");
+        User user = userService.getUserById(userId);
         return ResponseDataUtil.buildSuccess("200", "查询成功", user);
     }
 
@@ -74,7 +72,7 @@ public class UserController extends BaseController {
     public ResponseData GetAllUsers() {
         List<User> users = userService.getAllUsers();
         if (users == null)
-            return ResponseDataUtil.buildError("500", "查询错误");
+            return ResponseDataUtil.buildError("404", "查询错误");
         return ResponseDataUtil.buildSuccess("200", "查询成功", users);
     }
 
