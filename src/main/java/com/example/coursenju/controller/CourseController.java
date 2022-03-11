@@ -30,7 +30,7 @@ public class CourseController extends BaseController {
     @RequestMapping("/delete")
     public ResponseData DeleteCourse() {
         String courseId = request.getParameter("course_id");
-        if (!courseService.isExist(courseId))
+        if (courseId.equals("") || !courseService.isExist(courseId))
             return ResponseDataUtil.buildError("404", "课程不存在");
         courseService.deleteCourse(courseId);
         return ResponseDataUtil.buildSuccess("200", "删除课程成功");
@@ -40,7 +40,7 @@ public class CourseController extends BaseController {
     public ResponseData UpdateCourse() {
         Map<String, String[]> courseInfo = request.getParameterMap();
         String courseId = courseInfo.get("course_id")[0];
-        if (!courseService.isExist(courseId))
+        if (courseId.equals("") || !courseService.isExist(courseId))
             return ResponseDataUtil.buildError("404", "课程不存在");
         Course course = courseService.getCourseById(courseId);
         setCourseInfo(courseInfo, course);
@@ -52,16 +52,16 @@ public class CourseController extends BaseController {
     public ResponseData UpdateCourseStatus() {
         String courseId = request.getParameter("course_id");
         int status = Integer.parseInt(request.getParameter("course_status"));
-        if (!courseService.isExist(courseId))
+        if (courseId.equals("") || !courseService.isExist(courseId))
             return ResponseDataUtil.buildError("404", "课程不存在");
         courseService.updateCourseStatus(courseId, status);
         return ResponseDataUtil.buildSuccess("200", "更新课程状态成功");
     }
 
-    @RequestMapping("/get-id")
+    @RequestMapping("/get")
     public ResponseData GetCourseById() {
         String courseId = request.getParameter("course_id");
-        if (!courseService.isExist(courseId))
+        if (courseId.equals("") || !courseService.isExist(courseId))
             return ResponseDataUtil.buildError("404", "课程不存在");
         Course course = courseService.getCourseById(courseId);
         return ResponseDataUtil.buildSuccess("200", "查询课程成功", course);
@@ -72,7 +72,7 @@ public class CourseController extends BaseController {
         String teacherId = request.getParameter("user_id");
         List<Course> courses = courseService.getCourseByTeacherId(teacherId);
         if (courses == null)
-            return ResponseDataUtil.buildError("404", "查询错误");
+            return ResponseDataUtil.buildError("400", "内部错误");
         return ResponseDataUtil.buildSuccess("200", "查询课程成功", courses);
     }
 
@@ -80,8 +80,8 @@ public class CourseController extends BaseController {
     public ResponseData GetAllCourses() {
         List<Course> courses = courseService.getAllCourses();
         if (courses == null)
-            return ResponseDataUtil.buildError("404", "查询错误");
-        return ResponseDataUtil.buildSuccess("200", "查询成功", courses);
+            return ResponseDataUtil.buildError("400", "内部错误");
+        return ResponseDataUtil.buildSuccess("200", "查询课程成功", courses);
     }
 
     private void setCourseInfo(Map<String, String[]> courseInfo, Course course) {
