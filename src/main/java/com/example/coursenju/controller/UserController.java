@@ -14,66 +14,67 @@ public class UserController extends BaseController {
     private UserService userService;
 
     @RequestMapping("/register")
-    public ResponseData Register() {
+    public CommonResult Register() {
         Map<String, String[]> userInfo = request.getParameterMap();
         String userId = userInfo.get("user_id")[0];
         if (userId.equals("") || userService.isExist(userId))
-            return ResponseDataUtil.buildError("404", "用户已存在");
+            return CommonResult.validateFailed("用户已存在");
         User user = new User(userId);
         setUserInfo(userInfo, user);
         userService.addUser(user);
-        return ResponseDataUtil.buildSuccess("200", "注册成功");
+        return CommonResult.success(user, "注册成功");
     }
 
     @RequestMapping("/login")
-    public ResponseData Login() {
+    public CommonResult Login() {
         String userId = request.getParameter("user_id");
         String password = request.getParameter("password");
+        System.out.println("login: " + userId + " " + password);
         if (!userService.isExist(userId))
-            return ResponseDataUtil.buildError("404", "用户不存在");
+            return CommonResult.validateFailed("用户不存在");
         User user = userService.getUserById(userId);
         if (!password.equals(user.getPassword()))
-            return ResponseDataUtil.buildError("400", "密码错误");
-        return ResponseDataUtil.buildSuccess("200", "登录成功", user);
+            return CommonResult.validateFailed("密码错误");
+        return CommonResult.success(user, "登录成功");
     }
 
     @RequestMapping("/delete")
-    public ResponseData Delete() {
+    public CommonResult Delete() {
         String userId = request.getParameter("user_id");
         User user = userService.getUserById(userId);
         if (user == null)
-            return ResponseDataUtil.buildError("404", "用户不存在");
+            return CommonResult.validateFailed("用户不存在");
         userService.deleteUser(userId);
-        return ResponseDataUtil.buildSuccess("200", "删除成功");
+        return CommonResult.success(null, "删除用户成功");
     }
 
     @RequestMapping("/update")
-    public ResponseData Update() {
+    public CommonResult Update() {
         Map<String, String[]> userInfo = request.getParameterMap();
         String userId = userInfo.get("user_id")[0];
         if (!userService.isExist(userId))
-            return ResponseDataUtil.buildError("404", "用户不存在");
+            return CommonResult.validateFailed("用户不存在");
         User user = userService.getUserById(userId);
         setUserInfo(userInfo, user);
         userService.updateUser(user);
-        return ResponseDataUtil.buildSuccess("200", "更新成功");
+        return CommonResult.success(user, "更新用户成功");
     }
 
     @RequestMapping("/get")
-    public ResponseData GetUserById() {
+    public CommonResult GetUserById() {
         String userId = request.getParameter("user_id");
         if (!userService.isExist(userId))
-            return ResponseDataUtil.buildError("404", "用户不存在");
+            return CommonResult.validateFailed("用户不存在");
         User user = userService.getUserById(userId);
-        return ResponseDataUtil.buildSuccess("200", "查询成功", user);
+        return CommonResult.success(user, "查询用户成功");
     }
 
     @RequestMapping("/list")
-    public ResponseData GetAllUsers() {
+    public CommonResult GetAllUsers() {
         List<User> users = userService.getAllUsers();
         if (users == null)
-            return ResponseDataUtil.buildError("404", "查询错误");
-        return ResponseDataUtil.buildSuccess("200", "查询成功", users);
+            return CommonResult.failed("查询所有用户错误");
+        return CommonResult.success(users, "查询所有用户成功");
     }
 
     private void setUserInfo(Map<String, String[]> userInfo, User user) {
