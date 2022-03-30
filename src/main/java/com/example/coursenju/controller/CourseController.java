@@ -16,72 +16,72 @@ public class CourseController extends BaseController {
     private CourseService courseService;
 
     @RequestMapping("/add")
-    public ResponseData AddCourse() {
+    public CommonResult AddCourse() {
         Map<String, String[]> courseInfo = request.getParameterMap();
         String courseId = courseInfo.get("course_id")[0];
         if (courseId.equals("") || courseService.isExist(courseId))
-            return ResponseDataUtil.buildError("404", "课程已存在");
+            return CommonResult.validateFailed("课程已存在");
         Course course = new Course(courseId);
         setCourseInfo(courseInfo, course);
         courseService.addCourse(course);
-        return ResponseDataUtil.buildSuccess("200", "添加课程成功");
+        return CommonResult.success(course, "添加课程成功");
     }
 
     @RequestMapping("/delete")
-    public ResponseData DeleteCourse() {
+    public CommonResult DeleteCourse() {
         String courseId = request.getParameter("course_id");
         if (courseId.equals("") || !courseService.isExist(courseId))
-            return ResponseDataUtil.buildError("404", "课程不存在");
+            return CommonResult.validateFailed("课程不存在");
         courseService.deleteCourse(courseId);
-        return ResponseDataUtil.buildSuccess("200", "删除课程成功");
+        return CommonResult.success(null, "删除课程成功");
     }
 
     @RequestMapping("/update")
-    public ResponseData UpdateCourse() {
+    public CommonResult UpdateCourse() {
         Map<String, String[]> courseInfo = request.getParameterMap();
         String courseId = courseInfo.get("course_id")[0];
         if (courseId.equals("") || !courseService.isExist(courseId))
-            return ResponseDataUtil.buildError("404", "课程不存在");
+            return CommonResult.validateFailed("课程不存在");
         Course course = courseService.getCourseById(courseId);
         setCourseInfo(courseInfo, course);
         courseService.updateCourse(course);
-        return ResponseDataUtil.buildSuccess("200", "更新课程成功");
+        return CommonResult.success(course, "更新课程成功");
     }
 
     @RequestMapping("/update-status")
-    public ResponseData UpdateCourseStatus() {
+    public CommonResult UpdateCourseStatus() {
         String courseId = request.getParameter("course_id");
         int status = Integer.parseInt(request.getParameter("course_status"));
         if (courseId.equals("") || !courseService.isExist(courseId))
-            return ResponseDataUtil.buildError("404", "课程不存在");
+            return CommonResult.validateFailed("课程不存在");
         courseService.updateCourseStatus(courseId, status);
-        return ResponseDataUtil.buildSuccess("200", "更新课程状态成功");
+        return CommonResult.success(null, "更新课程状态成功");
     }
 
     @RequestMapping("/get")
-    public ResponseData GetCourseById() {
+    public CommonResult GetCourseById() {
         String courseId = request.getParameter("course_id");
         if (courseId.equals("") || !courseService.isExist(courseId))
-            return ResponseDataUtil.buildError("404", "课程不存在");
+            return CommonResult.validateFailed("课程不存在");
         Course course = courseService.getCourseById(courseId);
-        return ResponseDataUtil.buildSuccess("200", "查询课程成功", course);
+        return CommonResult.success(course, "查询课程成功");
     }
 
     @RequestMapping("/get-teacher")
-    public ResponseData GetCourseByTeacherId() {
+    public CommonResult GetCourseByTeacherId() {
         String teacherId = request.getParameter("user_id");
         List<Course> courses = courseService.getCourseByTeacherId(teacherId);
         if (courses == null)
-            return ResponseDataUtil.buildError("400", "内部错误");
-        return ResponseDataUtil.buildSuccess("200", "查询课程成功", courses);
+            return CommonResult.failed("根据教师查询课程错误");
+        return CommonResult.success(courses, "根据教师查询课程成功");
     }
 
     @RequestMapping("/list")
-    public ResponseData GetAllCourses() {
+    public CommonResult GetAllCourses() {
         List<Course> courses = courseService.getAllCourses();
         if (courses == null)
-            return ResponseDataUtil.buildError("400", "内部错误");
-        return ResponseDataUtil.buildSuccess("200", "查询课程成功", courses);
+            return CommonResult.failed("查询所有课程错误");
+        return CommonResult.success(courses, "查询所有课程成功");
     }
 
     private void setCourseInfo(Map<String, String[]> courseInfo, Course course) {

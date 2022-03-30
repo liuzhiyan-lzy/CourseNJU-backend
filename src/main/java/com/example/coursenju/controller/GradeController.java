@@ -17,76 +17,76 @@ public class GradeController extends BaseController {
     private GradeService gradeService;
 
     @RequestMapping("/add")
-    public ResponseData AddGrade() {
+    public CommonResult AddGrade() {
         Map<String, String[]> gradeInfo = request.getParameterMap();
         addGrade(gradeInfo);
-        return ResponseDataUtil.buildSuccess("200", "添加成绩单成功");
+        return CommonResult.success(null, "添加成绩单成功");
     }
 
     @RequestMapping("/import")
-    public ResponseData ImportGrades() {
+    public CommonResult ImportGrades() {
         // TODO
-        return ResponseDataUtil.buildSuccess("200", "导入成绩单成功");
+        return CommonResult.success(null, "批量添加成绩单成功");
     }
 
     @RequestMapping("/delete")
-    public ResponseData DeleteGrade() {
+    public CommonResult DeleteGrade() {
         String gradeId = request.getParameter("grade_id");
         if (gradeId.equals("") || !gradeService.isExist(gradeId))
-            return ResponseDataUtil.buildError("404", "成绩单不存在");
+            return CommonResult.validateFailed();
         gradeService.deleteGrade(gradeId);
-        return ResponseDataUtil.buildSuccess("200", "删除成绩单成功");
+        return CommonResult.success(null, "删除成绩单成功");
     }
 
     @RequestMapping("/update")
-    public ResponseData UpdateGrade() {
+    public CommonResult UpdateGrade() {
         Map<String, String[]> gradeInfo = request.getParameterMap();
         String gradeId = gradeInfo.get("grade_id")[0];
         if (gradeId.equals("") || !gradeService.isExist(gradeId))
-            return ResponseDataUtil.buildError("404", "成绩单不存在");
+            return CommonResult.validateFailed("成绩单不存在");
         Grade grade = gradeService.getGradeById(gradeId);
         setGradeInfo(gradeInfo, grade);
         gradeService.updateGrade(grade);
-        return ResponseDataUtil.buildSuccess("200", "更新成绩单成功");
+        return CommonResult.success(grade, "更新成绩单成功");
     }
 
     @RequestMapping("/get")
-    public ResponseData GetGradeById() {
+    public CommonResult GetGradeById() {
         String gradeId = request.getParameter("grade_id");
         if (gradeId.equals("") || !gradeService.isExist(gradeId))
-            return ResponseDataUtil.buildError("200", "成绩单不存在");
+            return CommonResult.validateFailed("成绩单不存在");
         Grade grade = gradeService.getGradeById(gradeId);
-        return ResponseDataUtil.buildSuccess("200", "查找成绩单成功", grade);
+        return CommonResult.success(grade, "查询成绩单成功");
     }
 
     @RequestMapping("get-course")
-    public ResponseData GetGradesByCourseId() {
+    public CommonResult GetGradesByCourseId() {
         String courseId = request.getParameter("course_id");
         if (courseId.equals(""))
-            return ResponseDataUtil.buildError("404", "未成功获取课程Id");
+            return CommonResult.validateFailed("课程不存在");
         List<Grade> grades = gradeService.getGradesByCourseId(courseId);
         if (grades == null)
-            return ResponseDataUtil.buildError("400", "内部错误");
-        return ResponseDataUtil.buildSuccess("200", "查找成绩单成功", grades);
+            return CommonResult.failed("根据课程查询成绩单错误");
+        return CommonResult.success(grades, "根据课程查询成绩单成功");
     }
 
     @RequestMapping("get-student")
-    public ResponseData GetGradesByStudentId() {
+    public CommonResult GetGradesByStudentId() {
         String studentId = request.getParameter("student_id");
         if (studentId.equals(""))
-            return ResponseDataUtil.buildError("404", "未成功获取学生Id");
+            return CommonResult.validateFailed("学号错误");
         List<Grade> grades = gradeService.getGradesByStudentId(studentId);
         if (grades == null)
-            return ResponseDataUtil.buildError("400", "内部错误");
-        return ResponseDataUtil.buildSuccess("200", "查找成绩单成功", grades);
+            return CommonResult.failed("根据学号查询成绩单错误");
+        return CommonResult.success(grades, "根据学号查询成绩单成功");
     }
 
     @RequestMapping("list")
-    public ResponseData GetAllGrades() {
+    public CommonResult GetAllGrades() {
         List<Grade> grades = gradeService.getAllGrades();
         if (grades == null)
-            return ResponseDataUtil.buildError("400", "内部错误");
-        return ResponseDataUtil.buildSuccess("200", "查找成绩单成功", grades);
+            return CommonResult.failed("查询所有成绩单错误");
+        return CommonResult.success(grades, "查询所有成绩单成功");
     }
 
     private void addGrade(Map<String, String[]> gradeInfo) {
