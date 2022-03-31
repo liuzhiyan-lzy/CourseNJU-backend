@@ -4,8 +4,8 @@
 <mapper namespace="com.example.coursenju.mapper.CourseMapper">
     <!--新建课程-->
     <insert id="addCourse" parameterType="com.example.coursenju.entity.Course" useGeneratedKeys="true">
-        INSERT INTO coursenju.course(course_id, course_name, teacher_id, capacity, course_status)
-        VALUES(#{courseId},#{courseName},#{teacherId},#{capacity},#{courseStatus})
+        INSERT INTO coursenju.course(course_id, course_name, teacher_id, capacity)
+        VALUES(#{courseId},#{courseName},#{teacherId},#{capacity})
     </insert>
 
     <!--删除课程-->
@@ -16,7 +16,7 @@
     <!--修改课程信息-->
     <update id="updateCourse" parameterType="com.example.coursenju.entity.Course">
         UPDATE coursenju.course
-        SET course_name=#{courseName},teacher_id=#{teacherId},capacity=#{capacity},course_status=#{courseStatus}
+        SET course_name=#{courseName},teacher_id=#{teacherId},capacity=#{capacity}
         WHERE course_id=#{courseId}
     </update>
 
@@ -26,8 +26,7 @@
                course_id as courseId,
                course_name as courseName,
                teacher_id as teacherId,
-               capacity as capacity,
-               course_status as courseStatus
+               capacity as capacity
         FROM coursenju.course WHERE course_id=#{courseId}
     </select>
 
@@ -37,8 +36,7 @@
                course_id as courseId,
                course_name as courseName,
                teacher_id as teacherId,
-               capacity as capacity,
-               course_status as courseStatus
+               capacity as capacity
         FROM coursenju.course WHERE teacher_id=#{teacherId}
     </select>
 
@@ -48,8 +46,7 @@
                course_id as courseId,
                course_name as courseName,
                teacher_id as teacherId,
-               capacity as capacity,
-               course_status as courseStatus
+               capacity as capacity
         FROM coursenju.course
     </select>
 </mapper>

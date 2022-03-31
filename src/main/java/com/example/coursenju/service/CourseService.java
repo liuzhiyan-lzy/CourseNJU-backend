@@ -24,14 +24,6 @@ public class CourseService {
         courseMapper.updateCourse(course);
     }
 
-    public void updateCourseStatus(String courseId, int status) {
-        Course course = getCourseById(courseId);
-        if (course.getCourseStatus() == status)
-            return;
-        course.setCourseStatus(status);
-        courseMapper.updateCourse(course);
-    }
-
     public Course getCourseById(String courseId) {
         return courseMapper.getCourseById(courseId);
     }

@@ -8,9 +8,34 @@ public class Grade {
 
     private String courseId;
 
+    private String courseName;
+
+    public String getCourseName() {
+        return courseName;
+    }
+
+    public void setCourseName(String courseName) {
+        this.courseName = courseName;
+    }
+
+    public int getGradeStatus() {
+        return gradeStatus;
+    }
+
+    public void setGradeStatus(int gradeStatus) {
+        this.gradeStatus = gradeStatus;
+    }
+
     private String studentId;
 
     private String studentName;
+
+    /**
+        0: 未发布
+        1: 已发布确认中
+        2: 已确认
+    */
+    private int gradeStatus;
 
     private int totalScore;
 

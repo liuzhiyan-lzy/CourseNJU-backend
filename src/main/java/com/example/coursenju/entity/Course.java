@@ -12,15 +12,6 @@ public class Course {
 
     private int capacity;
 
-    /**
-     * @value 0: 课程未开始
-     * @value 1: 课程进行中
-     * @value 2: 课程已结束, 未登分
-     * @value 3: 课程已登分, 确认中
-     * @value -1: 课程已结束
-     */
-    private int courseStatus;
-
     public int getId() {
         return id;
     }
@@ -61,14 +52,6 @@ public class Course {
         this.capacity = capacity;
     }
 
-    public int getCourseStatus() {
-        return courseStatus;
-    }
-
-    public void setCourseStatus(int courseStatus) {
-        this.courseStatus = courseStatus;
-    }
-
     public Course() {}
 
     public Course(String courseId) {
@@ -85,8 +68,6 @@ public class Course {
                 "\nteacherId: " +
                 teacherId +
                 "\ncapacity: " +
-                capacity +
-                "\ncourseStatus: " +
-                courseStatus;
+                capacity;
     }
 }

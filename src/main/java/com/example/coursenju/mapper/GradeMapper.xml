@@ -4,8 +4,8 @@
 <mapper namespace="com.example.coursenju.mapper.GradeMapper">
     <!--新建成绩单-->
     <insert id="addGrade" parameterType="com.example.coursenju.entity.Grade" useGeneratedKeys="true">
-        INSERT INTO coursenju.grade(grade_id, course_id, student_id, student_name, total_score, usual_score, mid_score, final_score)
-        VALUES(#{gradeId},#{courseId},#{studentId},#{studentName},#{totalScore},#{usualScore},#{midScore},#{finalScore})
+        INSERT INTO coursenju.grade(grade_id, course_id, course_name, student_id, student_name, grade_status, total_score, usual_score, mid_score, final_score)
+        VALUES(#{gradeId},#{courseId},#{courseName},#{studentId},#{studentName},#{gradeStatus},#{totalScore},#{usualScore},#{midScore},#{finalScore})
     </insert>
 
     <!--删除成绩单-->
@@ -16,7 +16,7 @@
     <!--修改成绩-->
     <update id="updateGrade" parameterType="com.example.coursenju.entity.Grade">
         UPDATE coursenju.grade
-        SET total_score=#{totalScore},usual_score=#{usualScore},mid_score=#{midScore},final_score=#{finalScore}
+        SET grade_status=#{gradeStatus},total_score=#{totalScore},usual_score=#{usualScore},mid_score=#{midScore},final_score=#{finalScore}
         WHERE grade_id=#{gradeId}
     </update>
 
@@ -25,8 +25,10 @@
         SELECT id as id,
                grade_id as gradeId,
                course_id as courseId,
+               course_name as courseName,
                student_id as studentId,
                student_name as studentName,
+               grade_status as gradeStatus,
                total_score as totalScore,
                usual_score as usualScore,
                mid_score as midScore,
@@ -35,12 +37,14 @@
     </select>
 
     <!--根据课程查找成绩单-->
-    <select id="getGradeByCourseId" parameterType="java.lang.String" resultType="com.example.coursenju.entity.Grade">
+    <select id="getGradesByCourseId" parameterType="java.lang.String" resultType="com.example.coursenju.entity.Grade">
         SELECT id as id,
                grade_id as gradeId,
                course_id as courseId,
+               course_name as courseName,
                student_id as studentId,
                student_name as studentName,
+               grade_status as gradeStatus,
                total_score as totalScore,
                usual_score as usualScore,
                mid_score as midScore,
@@ -49,12 +53,14 @@
     </select>
 
     <!--根据学生查找成绩单-->
-    <select id="getGradeByStudentId" parameterType="java.lang.String" resultType="com.example.coursenju.entity.Grade">
+    <select id="getGradesByStudentId" parameterType="java.lang.String" resultType="com.example.coursenju.entity.Grade">
         SELECT id as id,
                grade_id as gradeId,
                course_id as courseId,
+               course_name as courseName,
                student_id as studentId,
                student_name as studentName,
+               grade_status as gradeStatus,
                total_score as totalScore,
                usual_score as usualScore,
                mid_score as midScore,
@@ -67,8 +73,10 @@
         SELECT id as id,
                grade_id as gradeId,
                course_id as courseId,
+               course_name as courseName,
                student_id as studentId,
                student_name as studentName,
+               grade_status as gradeStatus,
                total_score as totalScore,
                usual_score as usualScore,
                mid_score as midScore,

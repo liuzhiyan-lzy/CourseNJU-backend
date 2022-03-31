@@ -16,7 +16,7 @@
     <!--修改用户信息-->
     <update id="updateUser" parameterType="com.example.coursenju.entity.User">
         UPDATE coursenju.user
-        SET password=#{password},college=#{college},email=#{email}
+        SET user_name=#{userName},user_sex=#{userSex},identity_id=#{identityId},password=#{password},college=#{college},email=#{email}
         WHERE user_id=#{userId}
     </update>
 
