@@ -1,7 +1,10 @@
 package com.example.coursenju.service;
 
+import com.example.coursenju.entity.Course;
 import com.example.coursenju.entity.Grade;
+import com.example.coursenju.entity.User;
 import com.example.coursenju.mapper.GradeMapper;
+import com.example.coursenju.util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +15,20 @@ import java.util.List;
 public class GradeService {
     @Autowired
     private GradeMapper gradeMapper;
+
+    public Grade addGrade(Course course, User user) {
+        Grade grade = new Grade();
+        String gradeId = Util.getRandomString(10);
+        while (isExist(gradeId))
+            gradeId = Util.getRandomString(10);
+        grade.setGradeId(gradeId);
+        grade.setCourseId(course.getCourseId());
+        grade.setCourseName(course.getCourseName());
+        grade.setStudentId(user.getUserId());
+        grade.setStudentName(user.getUserName());
+        gradeMapper.addGrade(grade);
+        return grade;
+    }
 
     public void addGrade(Grade grade) {
         gradeMapper.addGrade(grade);
