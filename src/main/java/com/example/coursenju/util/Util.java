@@ -1,5 +1,9 @@
 package com.example.coursenju.util;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.nio.channels.FileChannel;
 import java.util.Random;
 
 public class Util {
@@ -19,5 +23,25 @@ public class Util {
         }
         //将承载的字符转换成字符串
         return sb.toString();
+    }
+
+    public static String savaFileByNio(FileInputStream fis, String fileName) {
+        String fileSpace = System.getProperty("user.dir") + File.separator + "FileSpace";
+        String path = fileSpace + File.separator + fileName;
+        File file = new File(path);
+        if (file.getParentFile() != null || !file.getParentFile().isDirectory()) {
+            file.getParentFile().mkdirs();
+        }
+        try {
+            FileOutputStream fos = new FileOutputStream(path);
+            FileChannel inChannel = fis.getChannel();
+            FileChannel outChannel = fos.getChannel();
+            inChannel.transferTo(0, inChannel.size(), outChannel);
+            inChannel.close();
+            outChannel.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return path;
     }
 }

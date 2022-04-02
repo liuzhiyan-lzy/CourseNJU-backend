@@ -6,10 +6,21 @@ import com.example.coursenju.entity.User;
 import com.example.coursenju.service.CourseService;
 import com.example.coursenju.service.GradeService;
 import com.example.coursenju.service.UserService;
+import com.example.coursenju.util.ExcelData;
+import com.example.coursenju.util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
+import java.text.SimpleDateFormat;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -37,7 +48,9 @@ public class CourseController extends BaseController {
     public CommonResult AddCourse() {
         Map<String, String[]> courseInfo = request.getParameterMap();
         String courseId = courseInfo.get("course_id")[0];
-        if (courseId.equals("") || courseService.isExist(courseId))
+        if (courseId.equals(""))
+            return CommonResult.validateFailed("课程号不能为空");
+        if (courseService.isExist(courseId))
             return CommonResult.validateFailed("课程已存在");
         Course course = new Course(courseId);
         setCourseInfo(courseInfo, course);
@@ -112,11 +125,26 @@ public class CourseController extends BaseController {
      * @return List<Grade>
      */
     @RequestMapping("/add-students")
-    public CommonResult AddStudents() {
-        // TODO handle file
-
-        // TODO add grades
-        return CommonResult.success(null, "批量添加学生成功");
+    public CommonResult AddStudents(MultipartFile file) throws IOException {
+        String filename = file.getOriginalFilename();
+        String filePath = Util.savaFileByNio((FileInputStream) file.getInputStream(), filename);
+        System.out.println(filePath);
+        ExcelData sheet = new ExcelData(filePath, "Sheet1");
+        int rowNum = sheet.getRows();
+        List<Grade> grades = new LinkedList<>();
+        String courseId = sheet.getExcelDateByIndex(0, 0);
+        Course course = courseService.getCourseById(courseId);
+        if (course == null)
+            return CommonResult.validateFailed("文件中课程号错误");
+        for (int row = 1; row < rowNum; row++) {
+            String userId = sheet.getExcelDateByIndex(row, 0);
+            User user = userService.getUserById(userId);
+            if (user == null)
+                return CommonResult.validateFailed("文件中学号 " + userId + " 不存在");
+            Grade grade = gradeService.addGrade(course, user);
+            grades.add(grade);
+        }
+        return CommonResult.success(grades, "批量添加学生成功");
     }
 
     /**
