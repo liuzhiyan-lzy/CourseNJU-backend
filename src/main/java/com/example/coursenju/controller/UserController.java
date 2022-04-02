@@ -3,6 +3,7 @@ package com.example.coursenju.controller;
 import com.example.coursenju.entity.User;
 import com.example.coursenju.service.UserService;
 import com.example.coursenju.util.ExcelData;
+import com.example.coursenju.util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -55,11 +56,9 @@ public class UserController extends BaseController {
      */
     @RequestMapping("/import")
     public CommonResult Import(MultipartFile file) throws IOException {
-        SimpleDateFormat sdf = new SimpleDateFormat("/yyyy/MM/dd/");
         String filename = file.getOriginalFilename();
-        String filePath = savaFileByNio((FileInputStream) file.getInputStream(), filename);
+        String filePath = Util.savaFileByNio((FileInputStream) file.getInputStream(), filename);
         System.out.println(filePath);
-        // TODO handle file
         ExcelData sheet = new ExcelData(filePath, "Sheet1");
         int rowNum = sheet.getRows();
         List<User> users = new LinkedList<>();
@@ -77,26 +76,6 @@ public class UserController extends BaseController {
             users.add(user);
         }
         return CommonResult.success(users, "导入成功");
-    }
-
-    public static String savaFileByNio(FileInputStream fis, String fileName) {
-        String fileSpace = System.getProperty("user.dir") + File.separator + "FileSpace";
-        String path = fileSpace + File.separator + fileName;
-        File file = new File(path);
-        if (file.getParentFile() != null || !file.getParentFile().isDirectory()) {
-            file.getParentFile().mkdirs();
-        }
-        try {
-            FileOutputStream fos = new FileOutputStream(path);
-            FileChannel inChannel = fis.getChannel();
-            FileChannel outChannel = fos.getChannel();
-            inChannel.transferTo(0, inChannel.size(), outChannel);
-            inChannel.close();
-            outChannel.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return path;
     }
 
     /**
