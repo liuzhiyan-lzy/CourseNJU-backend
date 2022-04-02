@@ -8,8 +8,15 @@ import com.example.coursenju.service.GradeService;
 import com.example.coursenju.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.util.List;
 import java.util.Map;
 
@@ -37,7 +44,9 @@ public class CourseController extends BaseController {
     public CommonResult AddCourse() {
         Map<String, String[]> courseInfo = request.getParameterMap();
         String courseId = courseInfo.get("course_id")[0];
-        if (courseId.equals("") || courseService.isExist(courseId))
+        if (courseId.equals(""))
+            return CommonResult.validateFailed("课程号不能为空");
+        if (courseService.isExist(courseId))
             return CommonResult.validateFailed("课程已存在");
         Course course = new Course(courseId);
         setCourseInfo(courseInfo, course);
@@ -112,7 +121,7 @@ public class CourseController extends BaseController {
      * @return List<Grade>
      */
     @RequestMapping("/add-students")
-    public CommonResult AddStudents() {
+    public CommonResult AddStudents(@RequestParam("files") MultipartFile[] files) {
         // TODO handle file
 
         // TODO add grades

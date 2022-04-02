@@ -2,9 +2,17 @@ package com.example.coursenju.controller;
 
 import com.example.coursenju.entity.User;
 import com.example.coursenju.service.UserService;
+import com.example.coursenju.util.ExcelData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @RestController
@@ -46,9 +54,49 @@ public class UserController extends BaseController {
      * @return List<User>
      */
     @RequestMapping("/import")
-    public CommonResult Import() {
+    public CommonResult Import(MultipartFile file) throws IOException {
+        SimpleDateFormat sdf = new SimpleDateFormat("/yyyy/MM/dd/");
+        String filename = file.getOriginalFilename();
+        String filePath = savaFileByNio((FileInputStream) file.getInputStream(), filename);
+        System.out.println(filePath);
         // TODO handle file
-        return CommonResult.success(null);
+        ExcelData sheet = new ExcelData(filePath, "Sheet1");
+        int rowNum = sheet.getRows();
+        List<User> users = new LinkedList<>();
+        for (int row = 0; row < rowNum; row++) {
+            User user = new User();
+            user.setType(sheet.getExcelDateByIndex(row, 0).charAt(0) - '0');
+            user.setUserId(sheet.getExcelDateByIndex(row, 1));
+            user.setPassword(user.getUserId());
+            user.setUserName(sheet.getExcelDateByIndex(row, 2));
+            user.setIdentityId(sheet.getExcelDateByIndex(row, 3));
+            user.setUserSex(sheet.getExcelDateByIndex(row, 4).charAt(0) - '0');
+            user.setCollege(sheet.getExcelDateByIndex(row, 5));
+            user.setEmail(sheet.getExcelDateByIndex(row, 6));
+            userService.addUser(user);
+            users.add(user);
+        }
+        return CommonResult.success(users, "导入成功");
+    }
+
+    public static String savaFileByNio(FileInputStream fis, String fileName) {
+        String fileSpace = System.getProperty("user.dir") + File.separator + "FileSpace";
+        String path = fileSpace + File.separator + fileName;
+        File file = new File(path);
+        if (file.getParentFile() != null || !file.getParentFile().isDirectory()) {
+            file.getParentFile().mkdirs();
+        }
+        try {
+            FileOutputStream fos = new FileOutputStream(path);
+            FileChannel inChannel = fis.getChannel();
+            FileChannel outChannel = fos.getChannel();
+            inChannel.transferTo(0, inChannel.size(), outChannel);
+            inChannel.close();
+            outChannel.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return path;
     }
 
     /**
