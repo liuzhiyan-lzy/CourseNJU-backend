@@ -34,16 +34,33 @@ public class GradeService {
         gradeMapper.addGrade(grade);
     }
 
-    public void addGradesFromFile(File grades) {
-        // TODO
-    }
-
     public void deleteGrade(String gradeId) {
         gradeMapper.deleteGrade(gradeId);
     }
 
     public void updateGrade(Grade grade) {
         gradeMapper.updateGrade(grade);
+    }
+
+    public void updateStudentName(String user_id, String user_name) {
+        List<Grade> grades = getGradesByStudentId(user_id);
+        for (Grade grade : grades) {
+            grade.setStudentName(user_name);
+            updateGrade(grade);
+        }
+    }
+
+    public void updateCourseName(String course_id, String course_name) {
+        List<Grade> grades = getGradesByCourseId(course_id);
+        for (Grade grade : grades) {
+            grade.setCourseName(course_name);
+            updateGrade(grade);
+        }
+    }
+
+    public void confirm(Grade grade) {
+        grade.setGradeStatus(3);
+        updateGrade(grade);
     }
 
     public Grade getGradeById(String gradeId) {

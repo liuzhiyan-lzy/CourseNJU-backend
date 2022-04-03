@@ -16,7 +16,7 @@
     <!--修改成绩-->
     <update id="updateGrade" parameterType="com.example.coursenju.entity.Grade">
         UPDATE coursenju.grade
-        SET grade_status=#{gradeStatus},total_score=#{totalScore},usual_score=#{usualScore},mid_score=#{midScore},final_score=#{finalScore}
+        SET student_name=#{studentName},course_name=#{courseName},grade_status=#{gradeStatus},total_score=#{totalScore},usual_score=#{usualScore},mid_score=#{midScore},final_score=#{finalScore}
         WHERE grade_id=#{gradeId}
     </update>
 
