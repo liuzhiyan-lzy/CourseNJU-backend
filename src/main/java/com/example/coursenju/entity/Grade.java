@@ -33,7 +33,8 @@ public class Grade {
     /**
         0: 未发布
         1: 已发布确认中
-        2: 已确认
+        2: 反馈中
+        3: 已确认
     */
     private int gradeStatus;
 

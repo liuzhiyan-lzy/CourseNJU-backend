@@ -89,6 +89,8 @@ public class CourseController extends BaseController {
         if (courseId.equals("") || !courseService.isExist(courseId))
             return CommonResult.validateFailed("课程不存在");
         Course course = courseService.getCourseById(courseId);
+        if (!course.getCourseName().equals(courseInfo.get("course_name")[0]))
+            gradeService.updateCourseName(courseId, courseInfo.get("course_name")[0]);
         setCourseInfo(courseInfo, course);
         courseService.updateCourse(course);
         return CommonResult.success(course, "更新课程成功");

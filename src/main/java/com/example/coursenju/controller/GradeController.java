@@ -130,6 +130,21 @@ public class GradeController extends BaseController {
     }
 
     /**
+     * @path 学生主页 - 成绩确认
+     * @input grade_id
+     * @return Grade
+     */
+    @RequestMapping("confirm")
+    public CommonResult ConfirmGrade() {
+        String gradeId = request.getParameter("grade_id");
+        if (gradeId.equals("") || !gradeService.isExist(gradeId))
+            return CommonResult.validateFailed("成绩单错误");
+        Grade grade = gradeService.getGradeById(gradeId);
+        gradeService.confirm(grade);
+        return CommonResult.success(grade, "确认成绩单成功");
+    }
+
+    /**
      * @path Debug
      * @input null
      * @return List<Grade>

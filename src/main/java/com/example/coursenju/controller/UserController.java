@@ -1,6 +1,7 @@
 package com.example.coursenju.controller;
 
 import com.example.coursenju.entity.User;
+import com.example.coursenju.service.GradeService;
 import com.example.coursenju.service.UserService;
 import com.example.coursenju.util.ExcelData;
 import com.example.coursenju.util.Util;
@@ -21,6 +22,8 @@ import java.util.*;
 public class UserController extends BaseController {
     @Autowired
     private UserService userService;
+    @Autowired
+    private GradeService gradeService;
 
     /**
      * @path 教务员主页 - 用户管理 - 创建账号 - 单个创建
@@ -134,6 +137,8 @@ public class UserController extends BaseController {
             return CommonResult.validateFailed("用户不存在");
         User user = userService.getUserById(userId);
         user.setPassword(userInfo.get("password")[0]);
+        if (!user.getUserName().equals(userInfo.get("user_name")[0]))
+            gradeService.updateStudentName(userId, userInfo.get("user_name")[0]);
         setUserInfo(userInfo, user);
         userService.updateUser(user);
         return CommonResult.success(user, "更新用户成功");
@@ -160,6 +165,7 @@ public class UserController extends BaseController {
         if (password.equals(""))
             return CommonResult.validateFailed("密码为空");
         user.setPassword(password);
+        userService.updateUser(user);
         return CommonResult.success(user, "修改密码成功");
     }
 
