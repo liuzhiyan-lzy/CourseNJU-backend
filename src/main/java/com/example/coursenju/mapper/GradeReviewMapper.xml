@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.coursenju.mapper.GradeReviewMapper">
+    <!--新建反馈-->
+    <insert id="addGradeReview" parameterType="com.example.coursenju.entity.GradeReview" useGeneratedKeys="true">
+        INSERT INTO coursenju.grade_review(grade_id, review_status, objection_describe, review_opinion)
+        VALUES(#{gradeId},#{reviewStatus},#{objectionDescribe},#{reviewOpinion})
+    </insert>
+
+    <!--删除反馈-->
+    <delete id="deleteGradeReview" parameterType="java.lang.String">
+        DELETE FROM coursenju.grade_review WHERE grade_id=#{gradeId}
+    </delete>
+
+    <!--修改反馈-->
+    <update id="updateGradeReview" parameterType="com.example.coursenju.entity.GradeReview">
+        UPDATE coursenju.grade_review
+        SET review_status=#{reviewStatus},objection_describe=#{objectionDescribe},review_opinion=#{reviewOpinion}
+        WHERE grade_id=#{gradeId}
+    </update>
+
+    <!--根据id查找反馈-->
+    <select id="getGradeReviewByGradeId" parameterType="java.lang.String" resultType="com.example.coursenju.entity.GradeReview">
+        SELECT id as id,
+               grade_id as gradeId,
+               review_status as reviewStatus,
+               objection_describe as objectionDescribe,
+               review_opinion as reviewOpinion
+        FROM coursenju.grade_review WHERE grade_id=#{gradeId}
+    </select>
+
+    <!--查找所有反馈-->
+    <select id="getAllGradeReviews" resultType="com.example.coursenju.entity.GradeReview">
+        SELECT id as id,
+               grade_id as gradeId,
+               review_status as reviewStatus,
+               objection_describe as objectionDescribe,
+               review_opinion as reviewOpinion
+        FROM coursenju.grade_review
+    </select>
+</mapper>
