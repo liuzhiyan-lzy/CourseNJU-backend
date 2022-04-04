@@ -84,7 +84,10 @@ public class GradeController extends BaseController {
     }
 
     /**
-     * @path 教师主页 - 课程详情 - 成绩单详情
+     * @path {
+     *     教师主页 - 课程详情 - 成绩单详情
+     *     学生主页 - 成绩单详情
+     * }
      * @input grade_id
      * @return Grade
      */
