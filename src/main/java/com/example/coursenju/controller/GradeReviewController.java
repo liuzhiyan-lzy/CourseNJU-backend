@@ -55,7 +55,10 @@ public class GradeReviewController extends BaseController {
     }
 
     /**
-     * @path 学生主页 - 反馈详情
+     * @path {
+     *     学生主页 - 反馈详情
+     *     教师主页 - 课程详情 - 查看反馈
+     * }
      * @input grade_id
      * @return GradeReview
      */

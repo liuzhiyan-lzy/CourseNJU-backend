@@ -48,8 +48,13 @@ public class CourseController extends BaseController {
     public CommonResult AddCourse() {
         Map<String, String[]> courseInfo = request.getParameterMap();
         String courseId = courseInfo.get("course_id")[0];
+        String teacherId = courseInfo.get("teacher_id")[0];
         if (courseId.equals(""))
             return CommonResult.validateFailed("课程号不能为空");
+        if (teacherId.equals(""))
+            return CommonResult.validateFailed("教师编号不能为空");
+        if (!userService.checkTeacher(teacherId))
+            return CommonResult.validateFailed("教师编号错误");
         if (courseService.isExist(courseId))
             return CommonResult.validateFailed("课程已存在");
         Course course = new Course(courseId);

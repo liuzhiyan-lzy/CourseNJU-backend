@@ -77,7 +77,8 @@ public class GradeController extends BaseController {
         if (gradeId.equals("") || !gradeService.isExist(gradeId))
             return CommonResult.validateFailed("成绩单不存在");
         Grade grade = gradeService.getGradeById(gradeId);
-        grade.setGradeStatus(1);
+        if (grade.getGradeStatus() != 2)
+            grade.setGradeStatus(1);
         setGradeScore(gradeInfo, grade);
         gradeService.updateGrade(grade);
         return CommonResult.success(grade, "更新成绩单成功");

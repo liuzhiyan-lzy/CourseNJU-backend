@@ -35,6 +35,16 @@ public class UserService {
         return user != null;
     }
 
+    public boolean checkStudent(String userId) {
+        User user = getUserById(userId);
+        return user != null && user.getType() == 1;
+    }
+
+    public boolean checkTeacher(String userId) {
+        User user = getUserById(userId);
+        return user != null && user.getType() == 2;
+    }
+
     public List<User> getAllUsers() {
         return userMapper.getAllUsers();
     }
